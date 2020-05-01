@@ -2,37 +2,44 @@
 
 import re
 import requests
-import sys
+# import sys
 
-new_session = requests.session()
 
-init_url = "https://hitun.io"
-login_url = " "
-user_url = "https://hitun.io/user/"
-checkIn_url = "https://hitun.io/user/checkin"
+def checkIn(username, password):
+    new_session = requests.session()
 
-loginReq_header = {
-    "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.163 Safari/537.36"
-}
+    init_url = "https://hitun.io"
+    login_url = " "
+    # user_url = "https://hitun.io/user/"
+    checkIn_url = "https://hitun.io/user/checkin"
 
-loginFrom_data = {
-    "email": sys.argv[1],
-    "passwd": sys.argv[2]
-}
+    loginReq_header = {
+        "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.163 Safari/537.36"
+    }
 
-init_res = new_session.get(init_url)
-if init_res.status_code == 200:
-    print("connect success!")
-    login_address = re.findall("<a href=\"(.*?)\">.*\n.* 登入", init_res.text)
-    login_url = f"{init_url}{login_address[0]}"
+    loginFrom_data = {
+        "email": username,
+        "passwd": password
+    }
 
-login_res = new_session.post(login_url, headers=loginReq_header, data=loginFrom_data)
-login_str = re.findall(r'\"msg\":\"(.*?)\"', login_res.text)
-if login_str[0].encode('utf-8').decode('unicode_escape') == '欢迎回来':
-    print("login success!")
+    init_res = new_session.get(init_url)
+    if init_res.status_code == 200:
+        print("connect success!")
+        login_address = re.findall("<a href=\"(.*?)\">.*\n.* 登入", init_res.text)
+        login_url = f"{init_url}{login_address[0]}"
 
-checkIn_res = new_session.post(checkIn_url)
-checkIn_str = re.findall(r'\"msg\":\"(.*?)\"', checkIn_res.text)
-print(checkIn_str[0].encode('utf-8').decode('unicode_escape'))
+    login_res = new_session.post(login_url, headers=loginReq_header, data=loginFrom_data)
+    login_str = re.findall(r'\"msg\":\"(.*?)\"', login_res.text)
+    if login_str[0].encode('utf-8').decode('unicode_escape') == '欢迎回来':
+        print("login success!")
 
-new_session.close()
+    checkIn_res = new_session.post(checkIn_url)
+    checkIn_str = re.findall(r'\"msg\":\"(.*?)\"', checkIn_res.text)
+    message = checkIn_str[0].encode('utf-8').decode('unicode_escape')
+    print(message)
+    return message
+
+    new_session.close()
+
+# if __name__ == "__main__":
+#     checkIn('17551018764@163.com', 'zz362085995')
