@@ -35,11 +35,13 @@ def checkIn(username, password):
 
     checkIn_res = new_session.post(checkIn_url)
     checkIn_str = re.findall(r'\"msg\":\"(.*?)\"', checkIn_res.text)
+    # print(checkIn_str)
     message = checkIn_str[0].encode('utf-8').decode('unicode_escape')
     print(message)
     return message
 
     new_session.close()
 
+
 # if __name__ == "__main__":
-#     checkIn('17551018764@163.com', 'zz362085995')
+#     checkIn('qiuzhen11s@163.com', 'QhVm8dqqH3rMkneN'')
