@@ -31,13 +31,14 @@ def checkIn(username, password):
     login_res = new_session.post(login_url, headers=loginReq_header, data=loginFrom_data)
     login_str = re.findall(r'\"msg\":\"(.*?)\"', login_res.text)
     if login_str[0].encode('utf-8').decode('unicode_escape') == '欢迎回来':
-        print("login success!")
+        checkIn_res = new_session.post(checkIn_url)
+        checkIn_str = re.findall(r'\"msg\":\"(.*?)\"', checkIn_res.text)
+        # print(checkIn_str)
+        message = checkIn_str[0].encode('utf-8').decode('unicode_escape')
+        print(message)
+    else:
+        message = '登录失败，请检查账户信息'
 
-    checkIn_res = new_session.post(checkIn_url)
-    checkIn_str = re.findall(r'\"msg\":\"(.*?)\"', checkIn_res.text)
-    # print(checkIn_str)
-    message = checkIn_str[0].encode('utf-8').decode('unicode_escape')
-    print(message)
     return message
 
     new_session.close()
